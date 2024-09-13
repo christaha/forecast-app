@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: forecast
+      POSTGRES_USER: forecast_app_user
+      POSTGRES_PASSWORD: forecast_app_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres-data:/var/lib/postgresql
+  api:
+    image: weather-app:latest
+    environment:
+      LATITUDE: 39.1031
+      LONGITUDE: -84.5120
+      INTERVAL: 1
+      DAYS_AHEAD: 3
+      VERSION: 1.0.0
+      PG_PASSWORD: forecast_app_password
+      PG_USERNAME: forecast_app_user
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: forecast
+      WEATHER_API_URL: https://api.weather.gov
+    ports:
+      - 8000:80
